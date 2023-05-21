@@ -23,13 +23,49 @@ Productrouter.get("/", async (req, res, next) => {
 });
 
 Productrouter.post("/createproduct", async function (req, res, next) {
-  try {
-    const newProduct = new Productmodel(req.body);
-    await newsave();
-    res.send("New Product added Successfuly");
-  } catch (error) {
-    return res.status(400).json(error);
+  const {  productid,
+    name,
+    model,
+    description,
+    price,
+    normalprice,
+    time,
+    image,
+    priceperhour,
+    stocks}=req.body;
+  const newProduct =await new Productmodel({
+    productid,
+    name,
+    model,
+    description,
+    price,
+    normalprice,
+    time,
+    image,
+    priceperhour,
+    stocks
+});
+try {
+  const response = await newProduct.save();
+  if (response?._id) {
+    return res.status(200).json({
+      success: true,
+      message: "New Product Created Successfully!!!",
+      data: response,
+    });
+  } else {
+    return res.status(500).json({
+      success: false,
+      message: "New Product Created failed!!!",
+    });
   }
+} catch (error) {
+  return res.status(400).json({
+    success: false,
+    message: "Bad request!!!",
+    error: error.message,
+  });
+}
 });
 
 Productrouter.post("/editproduct", async function (req, res, next) {

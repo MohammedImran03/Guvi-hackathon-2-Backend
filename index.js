@@ -7,13 +7,15 @@ const Razorpay = require ('razorpay')
 const Productrouter = require('./Routes/Products');
 const userrouter = require('./Routes/Users');
 const bookingrouter=require('./Routes/bookingsroute');
-var cors = require('cors');
+var cors = require('cors')
 dotenv.config();
 
 const PORT = process.env.PORT;
-app.use(bodyParser.json());
+app.use(cors())
+app.use(express.json());
+// app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+
 
 const instance = new Razorpay({ 
   key_id: process.env.RAZORPAY_API_KEY, 
@@ -25,7 +27,7 @@ app.get("/", function (req, res) {
     res.send("Hi World Welcome to my Website🙏");
   });
 
-app.use("/Products", Productrouter);
+app.use("/products", Productrouter);
 app.use("/users", userrouter);
 app.use("/bookings", bookingrouter);
 app.listen(PORT, () => {
